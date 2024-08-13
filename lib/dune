@@ -1,2 +1,4 @@
 (library
- (name dust))
+ (name dust)
+ (public_name dust)
+ (modules priority_queue))

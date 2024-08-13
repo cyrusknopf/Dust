@@ -1,4 +1,7 @@
 open Alcotest
+open Dust.Priority_queue
+
+let () = MaxHeap.init
 
 let test_hello_with_name name () =
   let greeting = "Hello " ^ name ^ "!" in

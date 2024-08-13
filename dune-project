@@ -19,7 +19,11 @@
  (name dust)
  (synopsis "OCaml advanced DS")
  (description "A longer description")
- (depends ocaml dune)
+ (depends 
+   ocaml 
+   dune
+   (alcotest :with-test)
+ )
  (tags
   (topics "to describe" your project))
  )
