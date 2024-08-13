@@ -1,4 +1,4 @@
 (test
- (name test_priority_queue)
+ (name test_max_heap)
  (libraries dust alcotest )
 )

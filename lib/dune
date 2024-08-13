@@ -1,4 +1,4 @@
 (library
  (name dust)
  (public_name dust)
- (modules priority_queue))
+ (modules max_heap))

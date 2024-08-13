@@ -1,1 +1,1 @@
-module PrioQueue = Priority_queue 
+module MaxHeap = Max_heap
