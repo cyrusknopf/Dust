@@ -1,17 +1,18 @@
-open Alcotest
 open Dust.Priority_queue
 
-let () = MaxHeap.init
 
-let test_hello_with_name name () =
-  let greeting = "Hello " ^ name ^ "!" in
-  let expected = Printf.sprintf "Hello %s!" name in
-  check string "same string" greeting expected
+let test_init () =
+    let mh = MaxHeap.init () in
+    match mh.root with
+    | None -> ()
+    | _ -> Alcotest.fail "Root not None on init"
+
+
 
 let suite =
-  [ "can greet Tom", `Quick, test_hello_with_name "Tom"
-  ; "can greet John", `Quick, test_hello_with_name "John"
+  [
+      "Test init", `Quick, test_init;
   ]
 
 let () =
-  Alcotest.run "Dummy" [ "Greeting", suite ]
+  Alcotest.run "Priority Queue" [ "Max Heap", suite ]

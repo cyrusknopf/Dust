@@ -1,7 +1,14 @@
 module type PrioQueue =
     sig
-        type 'a node
-        type 'a pqueue
+        type 'a node = {
+            value : 'a;
+            prio : int;
+            l_child : 'a node option;
+            r_child : 'a node option;
+        }
+        type 'a pqueue = {
+            root : 'a node option;
+        }
 
         val init : unit -> 'a pqueue
 
