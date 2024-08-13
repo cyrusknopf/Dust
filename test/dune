@@ -1,0 +1,4 @@
+(test
+ (name test_priority_queue)
+ (modules test_priority_queue)
+ (libraries alcotest))
