@@ -51,8 +51,20 @@ module MaxHeap =
                                 let new_root = { right with r_child = Some r} in
                                 { root = Some new_root }
                             else { root = Some r }
-                    | Some left, Some right -> q
-
+                    | Some left, Some right ->
+                            match get_max left right with
+                            | left ->
+                                if left.value > r.value then
+                                    let new_root = { left with l_child = Some r } in
+                                    { root = Some new_root }
+                                else
+                                    { root = Some r }
+                            | right ->
+                                if right.value > r.value then
+                                    let new_root = { right with r_child = Some r} in
+                                    { root = Some new_root }
+                                else
+                                    { root = Some r }
             
 
         let rec push (q : 'a pqueue) (n : 'a node) : 'a pqueue =
