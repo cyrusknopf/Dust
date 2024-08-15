@@ -6,7 +6,7 @@ let test_init () =
     | None -> ()
     | _ -> Alcotest.fail "Root not None on init"
 
-let test_heapify () =
+let test_heapify_l_child_only () =
     let ch1 = { MaxHeap.value = "a"; prio = 1; l_child = None; r_child = None } in
     let r = { MaxHeap.value = "b"; prio = 0; l_child = Some ch1; r_child = None } in
     let mh = { MaxHeap.root = Some r } in
@@ -18,13 +18,29 @@ let test_heapify () =
         | _ -> Alcotest.fail "Expected root.l_child to have value 'b'")
     | _ -> Alcotest.fail "Expected mh'.root to have value 'a'"
 
+let test_heapify_r_child_only () =
+    let ch1 = { MaxHeap.value = "a"; prio = 1; l_child = None; r_child = None } in
+    let r = { MaxHeap.value = "b"; prio = 0; l_child = None; r_child = Some ch1 } in
+    let mh = { MaxHeap.root = Some r } in
+    let mh' = MaxHeap.heapify mh in
+    match mh'.root with
+    | Some r when r.value = "a" -> (
+        match r.l_child, r.r_child with
+        | None, Some right when right.value = "b" -> ()
+        | _ -> Alcotest.fail "Expected root.l_child to have value 'b'")
+    | _ -> Alcotest.fail "Expected mh'.root to have value 'a'"
+
+
+
 
 
 
 let suite =
   [
       "Test init", `Quick, test_init;
-      "Test heapify", `Quick, test_heapify
+      "Test heapify: left child only", `Quick, test_heapify_l_child_only;
+      "Test heapify: right child only", `Quick, test_heapify_r_child_only;
+
   ]
 
 let () =

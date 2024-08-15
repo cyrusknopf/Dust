@@ -65,7 +65,7 @@ module MaxHeap =
                                 let new_left_subtree = heapify { root = Some new_left } in
                                 let new_root = { left with l_child = new_left_subtree.root } in
                                 { root = Some new_root }
-                            | _, r when r.prio > r.prio ->
+                            | _, r when r.prio > root.prio ->
                                 let new_right = { root with l_child = r.l_child; r_child = r.r_child } in
                                 let new_right_subtree = heapify { root = Some new_right } in
                                 let new_root = { right with r_child = new_right_subtree.root } in
