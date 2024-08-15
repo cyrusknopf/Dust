@@ -59,7 +59,7 @@ module MaxHeap =
                             else { root = Some root }
                     | Some left, Some right ->
                             match left, right with
-                            | l, _ when l.prio > root.prio ->
+                            | l, _ when l.prio > root.prio -> (* Doesnt work: picks l even if r is bigger *)
                                 let new_left = 
                                     {root with l_child = l.l_child; r_child = l.r_child} in
                                 let new_left_subtree = heapify { root = Some new_left } in
