@@ -1,9 +1,3 @@
-module type Ordered =
-    sig
-        type t
-        val leq : t -> t -> bool
-    end
-
 module MaxHeap =
     struct
         type 'a node = {
@@ -81,12 +75,12 @@ module MaxHeap =
     end
 
 (* TESTS *)
-let%expect_test "test init" =
+let%expect_test "test/init/()" =
     let mh = MaxHeap.init () in
     print_string (string_of_bool (Option.is_none mh.root));
     [%expect {| true |}]
 
-let%expect_test "test get_max left" =
+let%expect_test "test/get_max/left_greater" =
     let a = MaxHeap.create_node 'a' 10 in
     let b = MaxHeap.create_node 'b' 1 in
     let res = (MaxHeap.get_max (Some a) (Some b)) in
@@ -134,7 +128,7 @@ let%expect_test "test heapify rchild" =
                 [%expect {| rchild |}]
     | _ -> [%expect.unreachable]
 
-let%expect_test "test heapify both children" =
+let%expect_test "test-heapify-rchild_greater" =
     let rc = MaxHeap.create_node "rchild" 20 in
     let lc = MaxHeap.create_node "lchild" 15 in
     let r = { MaxHeap.value = "root"; prio = 10; r_child = Some rc; l_child = Some lc } in
@@ -143,6 +137,30 @@ let%expect_test "test heapify both children" =
     match mh'.root with
     | Some r -> print_string r.value;
                 [%expect {| rchild |}]
+    | _ -> [%expect.unreachable]
+
+let%expect_test "test-heapify-lchild_greater" =
+    let rc = MaxHeap.create_node "rchild" 20 in
+    let lc = MaxHeap.create_node "lchild" 30 in
+    let r = { MaxHeap.value = "root"; prio = 10; r_child = Some rc; l_child = Some lc } in
+    let mh = { MaxHeap.root = Some r } in
+    let mh' = MaxHeap.heapify mh in
+    match mh'.root with
+    | Some r -> print_string r.value;
+                [%expect {| lchild |}]
+    | _ -> [%expect.unreachable]
+
+(* This swaps the child, and then grandchild *)
+let%expect_test "test-heapify-rgchild_greatest" =
+    let rgc = MaxHeap.create_node "rgchild" 20 in
+    let lgc = MaxHeap.create_node "lgchild" 15 in
+    let lc = { MaxHeap.value = "lchild"; prio = 12; r_child = Some rgc; l_child = Some lgc } in
+    let r = { MaxHeap.value = "root"; prio = 10; r_child = None; l_child = Some lc } in
+    let mh = { MaxHeap.root = Some r } in
+    let mh' = MaxHeap.heapify mh in
+    match mh'.root with
+    | Some r -> print_string r.value;
+                [%expect {| rgchild |}]
     | _ -> [%expect.unreachable]
 
 
