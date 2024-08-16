@@ -39,7 +39,7 @@ module MaxHeap =
                     | Some left, None -> (* Only left child -> swap if larger *)
                             if left.prio > root.prio then
                                 let new_root = swapl root left in
-                                { root = Some new_root }
+                                heapify { root = Some new_root }
                             else { root = Some root }
 
                     | None, Some right -> (* Only right child -> swap if larger *)
@@ -51,8 +51,8 @@ module MaxHeap =
                     | Some left, Some right ->
                             match left, right with
                             | l, r when l.prio > root.prio && l.prio > r.prio ->
-                                    let new_root = swapl root left in
-                                    { root = Some new_root }
+                                let new_root = swapl root left in
+                                { root = Some new_root }
                             | l, r when r.prio > root.prio && r.prio > l.prio ->
                                 let new_root = swapr root right in
                                 { root = Some new_root}
@@ -75,22 +75,21 @@ module MaxHeap =
     end
 
 (* TESTS *)
-let%expect_test "test/init/()" =
+let%expect_test "test-init-()" =
     let mh = MaxHeap.init () in
     print_string (string_of_bool (Option.is_none mh.root));
     [%expect {| true |}]
 
-let%expect_test "test/get_max/left_greater" =
+let%expect_test "test-get_max-left_greater" =
     let a = MaxHeap.create_node 'a' 10 in
     let b = MaxHeap.create_node 'b' 1 in
     let res = (MaxHeap.get_max (Some a) (Some b)) in
     match res with
     | Some r -> print_char r.value;
                 [%expect {| a |}]
-    | None -> print_char 'z';
-                [%expect.unreachable]
+    | None -> [%expect.unreachable]
 
-let%expect_test "test get_max right" =
+let%expect_test "test-get_max-right" =
     let x = MaxHeap.create_node 'x' 10 in
     let y = MaxHeap.create_node 'y' 1 in
     let res = (MaxHeap.get_max (Some y) (Some x)) in
@@ -99,7 +98,7 @@ let%expect_test "test get_max right" =
                 [%expect {| x |}]
     | None -> [%expect.unreachable]
 
-let%expect_test "test heapify root" = 
+let%expect_test "test-heapify-root" = 
     let r = MaxHeap.create_node "root" 10 in
     let mh = { MaxHeap.root = Some r } in
     let mh' = MaxHeap.heapify mh in
@@ -108,7 +107,7 @@ let%expect_test "test heapify root" =
                 [%expect {| root |}]
     | None -> [%expect.unreachable]
 
-let%expect_test "test heapify lchild" =
+let%expect_test "test-heapify-lchild" =
     let lc = MaxHeap.create_node "lchild" 15 in
     let r = { MaxHeap.value = "root"; prio = 10; l_child = Some lc; r_child = None } in
     let mh = { MaxHeap.root = Some r } in
@@ -118,7 +117,7 @@ let%expect_test "test heapify lchild" =
                 [%expect {| lchild |}]
     | _ -> [%expect.unreachable]
 
-let%expect_test "test heapify rchild" =
+let%expect_test "test-heapify-rchild" =
     let rc = MaxHeap.create_node "rchild" 15 in
     let r = { MaxHeap.value = "root"; prio = 10; r_child = Some rc; l_child = None } in
     let mh = { MaxHeap.root = Some r } in
@@ -150,7 +149,7 @@ let%expect_test "test-heapify-lchild_greater" =
                 [%expect {| lchild |}]
     | _ -> [%expect.unreachable]
 
-(* This swaps the child, and then grandchild *)
+(* XXX This swaps the child, and then grandchild *)
 let%expect_test "test-heapify-rgchild_greatest" =
     let rgc = MaxHeap.create_node "rgchild" 20 in
     let lgc = MaxHeap.create_node "lgchild" 15 in
@@ -162,5 +161,3 @@ let%expect_test "test-heapify-rgchild_greatest" =
     | Some r -> print_string r.value;
                 [%expect {| rgchild |}]
     | _ -> [%expect.unreachable]
-
-
