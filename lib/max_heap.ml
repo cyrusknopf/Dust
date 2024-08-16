@@ -35,8 +35,6 @@ module MaxHeap =
 
         let init () : 'a pqueue = { root = None }
 
-        
-
         let rec heapify (q : 'a pqueue) : 'a pqueue =
             match q.root with
             | None -> q
@@ -76,9 +74,6 @@ module MaxHeap =
             let new_subtree = heapify { root = Some new_child } in
             { child with r_child = new_subtree.root }
 
-
-
-        
         let rec push (q : 'a pqueue) (n : 'a node) : 'a pqueue =
             match q.root with
             | None -> { root = Some n }
@@ -100,3 +95,54 @@ let%expect_test "test get_max left" =
                 [%expect {| a |}]
     | None -> print_char 'z';
                 [%expect.unreachable]
+
+let%expect_test "test get_max right" =
+    let x = MaxHeap.create_node 'x' 10 in
+    let y = MaxHeap.create_node 'y' 1 in
+    let res = (MaxHeap.get_max (Some y) (Some x)) in
+    match res with
+    | Some r -> print_char r.value;
+                [%expect {| x |}]
+    | None -> [%expect.unreachable]
+
+let%expect_test "test heapify root" = 
+    let r = MaxHeap.create_node "root" 10 in
+    let mh = { MaxHeap.root = Some r } in
+    let mh' = MaxHeap.heapify mh in
+    match mh'.root with
+    | Some r -> print_string r.value;
+                [%expect {| root |}]
+    | None -> [%expect.unreachable]
+
+let%expect_test "test heapify lchild" =
+    let lc = MaxHeap.create_node "lchild" 15 in
+    let r = { MaxHeap.value = "root"; prio = 10; l_child = Some lc; r_child = None } in
+    let mh = { MaxHeap.root = Some r } in
+    let mh' = MaxHeap.heapify mh in
+    match mh'.root with
+    | Some r -> print_string r.value;
+                [%expect {| lchild |}]
+    | _ -> [%expect.unreachable]
+
+let%expect_test "test heapify rchild" =
+    let rc = MaxHeap.create_node "rchild" 15 in
+    let r = { MaxHeap.value = "root"; prio = 10; r_child = Some rc; l_child = None } in
+    let mh = { MaxHeap.root = Some r } in
+    let mh' = MaxHeap.heapify mh in
+    match mh'.root with
+    | Some r -> print_string r.value;
+                [%expect {| rchild |}]
+    | _ -> [%expect.unreachable]
+
+let%expect_test "test heapify both children" =
+    let rc = MaxHeap.create_node "rchild" 20 in
+    let lc = MaxHeap.create_node "lchild" 15 in
+    let r = { MaxHeap.value = "root"; prio = 10; r_child = Some rc; l_child = Some lc } in
+    let mh = { MaxHeap.root = Some r } in
+    let mh' = MaxHeap.heapify mh in
+    match mh'.root with
+    | Some r -> print_string r.value;
+                [%expect {| rchild |}]
+    | _ -> [%expect.unreachable]
+
+
