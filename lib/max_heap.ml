@@ -41,37 +41,42 @@ module MaxHeap =
             | Some root ->
                     match root.l_child, root.r_child with
                     | None, None -> { root = Some root } (* No children -> return itself *)
+
                     | Some left, None -> (* Only left child -> swap if larger *)
                             if left.prio > root.prio then
-                                let new_left = 
-                                    {root with l_child = left.l_child; r_child = left.r_child} in
-                                let new_left_subtree = heapify { root = Some new_left } in
-                                let new_root = { left with l_child = new_left_subtree.root } in
+                                let new_root = swapl root left in
                                 { root = Some new_root }
                             else { root = Some root }
+
                     | None, Some right -> (* Only right child -> swap if larger *)
                             if right.prio > root.prio then
-                                let new_right =
-                                    { root with l_child = right.l_child; r_child = right.r_child } in
-                                let new_right_subtree = heapify { root = Some new_right } in
-                                let new_root = { right with r_child = new_right_subtree.root } in
+                                let new_root = swapr root right in
                                 { root = Some new_root }
                             else { root = Some root }
+
                     | Some left, Some right ->
                             match left, right with
-                            | l, _ when l.prio > root.prio -> (* Doesnt work: picks l even if r is bigger *)
-                                let new_left = 
-                                    {root with l_child = l.l_child; r_child = l.r_child} in
-                                let new_left_subtree = heapify { root = Some new_left } in
-                                let new_root = { left with l_child = new_left_subtree.root } in
-                                { root = Some new_root }
-                            | _, r when r.prio > root.prio ->
-                                let new_right = { root with l_child = r.l_child; r_child = r.r_child } in
-                                let new_right_subtree = heapify { root = Some new_right } in
-                                let new_root = { right with r_child = new_right_subtree.root } in
-                                { root = Some new_root }
+                            | l, r when l.prio > root.prio && l.prio > r.prio ->
+                                    let new_root = swapl root left in
+                                    { root = Some new_root }
+                            | l, r when r.prio > root.prio && r.prio > l.prio ->
+                                let new_root = swapr root right in
+                                { root = Some new_root}
                             | _ -> { root = Some root}
 
+            and swapl (parent : 'a node ) (child : 'a node ) : 'a node =
+            let new_child = { parent with l_child = child.l_child; r_child = child.r_child } in
+            let new_subtree = heapify { root = Some new_child } in
+            { child with l_child = new_subtree.root }
+
+            and swapr (parent : 'a node ) (child : 'a node ) : 'a node =
+            let new_child = { parent with l_child = child.l_child; r_child = child.r_child } in
+            let new_subtree = heapify { root = Some new_child } in
+            { child with r_child = new_subtree.root }
+
+
+
+        
         let rec push (q : 'a pqueue) (n : 'a node) : 'a pqueue =
             match q.root with
             | None -> { root = Some n }
