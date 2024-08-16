@@ -35,6 +35,8 @@ module MaxHeap =
 
         let init () : 'a pqueue = { root = None }
 
+        
+
         let rec heapify (q : 'a pqueue) : 'a pqueue =
             match q.root with
             | None -> q
@@ -82,3 +84,19 @@ module MaxHeap =
             | None -> { root = Some n }
             | Some r ->  push q r
     end
+
+(* TESTS *)
+let%expect_test "test init" =
+    let mh = MaxHeap.init () in
+    print_string (string_of_bool (Option.is_none mh.root));
+    [%expect {| true |}]
+
+let%expect_test "test get_max left" =
+    let a = MaxHeap.create_node 'a' 10 in
+    let b = MaxHeap.create_node 'b' 1 in
+    let res = (MaxHeap.get_max (Some a) (Some b)) in
+    match res with
+    | Some r -> print_char r.value;
+                [%expect {| a |}]
+    | None -> print_char 'z';
+                [%expect.unreachable]

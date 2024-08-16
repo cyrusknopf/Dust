@@ -1,4 +1,7 @@
 (library
  (name dust)
  (public_name dust)
- (modules max_heap))
+ (modules max_heap)
+ (inline_tests)
+ (preprocess (pps ppx_expect ppx_inline_test))
+ )
