@@ -66,12 +66,12 @@ module MaxHeap =
 
             and swapl (parent : 'a node ) (child : 'a node ) : 'a node =
             let new_child = { parent with l_child = child.l_child; r_child = child.r_child } in
-            let new_subtree = heapify { root = Some new_child } in
+            let new_subtree = { root = Some new_child } in
             { child with l_child = new_subtree.root }
 
             and swapr (parent : 'a node ) (child : 'a node ) : 'a node =
             let new_child = { parent with l_child = child.l_child; r_child = child.r_child } in
-            let new_subtree = heapify { root = Some new_child } in
+            let new_subtree = { root = Some new_child } in
             { child with r_child = new_subtree.root }
 
         let rec push (q : 'a pqueue) (n : 'a node) : 'a pqueue =

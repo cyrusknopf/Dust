@@ -1,1 +1,1 @@
-module MaxHeap = Max_heap
+module MaxHeap = MaxHeap
