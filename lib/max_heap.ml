@@ -155,7 +155,6 @@ let%expect_test "test-heapify-lchild_greater" =
                 [%expect {| lchild |}]
     | _ -> [%expect.unreachable]
 
-(* XXX This swaps the child, and then grandchild *)
 let%expect_test "test-heapify-rgchild_greatest" =
     let rgc = MaxHeap.create_node "rgchild" 20 in
     let lgc = MaxHeap.create_node "lgchild" 15 in
@@ -166,4 +165,17 @@ let%expect_test "test-heapify-rgchild_greatest" =
     match mh'.root with
     | Some r -> print_string r.value;
                 [%expect {| rgchild |}]
+    | _ -> [%expect.unreachable]
+
+let%expect_test "test-heapify-rchild_greatest" =
+    let rgc = MaxHeap.create_node "rgchild" 20 in
+    let lgc = MaxHeap.create_node "lgchild" 15 in
+    let lc = { MaxHeap.value = "lchild"; prio = 12; r_child = Some rgc; l_child = Some lgc } in
+    let rc = { MaxHeap.value = "rchild"; prio = 100; r_child = None; l_child = None } in
+    let r = { MaxHeap.value = "root"; prio = 10; r_child = Some rc; l_child = Some lc } in
+    let mh = { MaxHeap.root = Some r } in
+    let mh' = MaxHeap.heapify mh in
+    match mh'.root with
+    | Some r -> print_string r.value;
+                [%expect {| rchild |}]
     | _ -> [%expect.unreachable]
