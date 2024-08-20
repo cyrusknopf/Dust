@@ -5,7 +5,7 @@
 (generate_opam_files true)
 
 (source
- (github username/reponame))
+ (github cyrusknopf/dust))
 
 (authors "Cyrus Knopf")
 
@@ -13,12 +13,12 @@
 
 (license LICENSE)
 
-(documentation https://url/to/documentation)
+(documentation https://cyrusknopf.com)
 
 (package
  (name dust)
  (synopsis "OCaml advanced DS")
- (description "A longer description")
+ (description "Various datastructures, implemented in OCaml")
  (depends 
    ocaml 
    dune

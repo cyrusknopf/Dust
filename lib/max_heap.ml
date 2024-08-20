@@ -34,29 +34,35 @@ module MaxHeap =
             | None -> q
             | Some root ->
                     match root.l_child, root.r_child with
-                    | None, None -> { root = Some root } (* No children -> return itself *)
+                    (* No children -> return itself *)
+                    | None, None -> { root = Some root } 
 
-                    | Some left, None -> (* Only left child -> swap if larger *)
-                            if left.prio > root.prio then
-                                let new_root = swapl root left in
-                                heapify { root = Some new_root }
+                    (* Only left child -> swap if larger *)
+                    | Some left, None -> 
+                            let newl = Option.get (heapify {root = Some left}).root in
+                                if newl.prio > root.prio then
+                                    { root = Some (swapl root newl) }
+                                else { root = Some root }
+
+                    (* Only right child -> swap if larger *)
+                    | None, Some right -> 
+                            let newr = Option.get (heapify {root = Some right}).root in
+                            if newr.prio > root.prio then
+                                { root = Some (swapr root newr) }
                             else { root = Some root }
 
-                    | None, Some right -> (* Only right child -> swap if larger *)
-                            if right.prio > root.prio then
-                                let new_root = swapr root right in
-                                { root = Some new_root }
-                            else { root = Some root }
-
+                    (* Left and right child -> swap with larger child *)
                     | Some left, Some right ->
-                            match left, right with
+                            let newr = Option.get (heapify {root = Some right}).root in
+                            let newl = Option.get (heapify {root = Some left}).root in
+                            match newl, newr with
                             | l, r when l.prio > root.prio && l.prio > r.prio ->
                                 let new_root = swapl root left in
                                 { root = Some new_root }
                             | l, r when r.prio > root.prio && r.prio > l.prio ->
                                 let new_root = swapr root right in
                                 { root = Some new_root}
-                            | _ -> { root = Some root}
+                            | _, _  -> { root = Some root}
 
             and swapl (parent : 'a node ) (child : 'a node ) : 'a node =
             let new_child = { parent with l_child = child.l_child; r_child = child.r_child } in
