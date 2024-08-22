@@ -20,7 +20,6 @@ module CompleteBTree =
         let get_lesser (a : 'a node) (b : 'a node) : 'a node =
             if a.h > b.h then a else b
 
-        (* TODO TEST *)
         let rec backprop (n : 'a node) (h : int) : 'a tree = 
             match n.p with
             | None -> { root = Some n }
@@ -32,9 +31,9 @@ module CompleteBTree =
             | Some r ->
                 match r.l, r.r with
                 | Some left, Some right ->
-                    push { root = Some (get_lesser left right) } n
+                        push { root = Some (get_lesser left right) } n (*TODO This case doesn't update correctly*)
                 | Some _, None ->
-                        backprop { n with p = Some {r with r = Some n} } 1
+                        backprop { n with p = Some {r with r = Some n } } 1
                 | None, Some _ -> (*Should never match *)
                         raise ( BadStructure "Should never be a right child with no left" )
                 | None, None ->
@@ -87,7 +86,7 @@ let %expect_test "test-push-two" =
                         print_int c2.h;
                         [%expect {| 0 |}];
                 | _ -> [%expect.unreachable]);
-    | None -> [%expect.unreachable]
+    | _ -> [%expect.unreachable]
 
 let %expect_test "test-push-three" =
     let parent = CompleteBTree.make_node 'a' in
@@ -99,7 +98,28 @@ let %expect_test "test-push-three" =
     let tree'' = CompleteBTree.push tree' child2 in
     let tree''' = CompleteBTree.push tree'' child3 in
     match tree'''.root with
-    | Some r ->
+    | Some r ->(
             print_char r.v;
             [%expect {| a |}];
+            match r.l, r.r with
+                | Some c1, Some c2 ->(
+                        print_char c1.v;
+                        [%expect {| b |}];
+                        print_char c2.v;
+                        [%expect {| c |}];
+                        print_int r.h;
+                        [%expect {| 2 |}];
+                        print_int c1.h;
+                        [%expect {| 1 |}];
+                        print_int c2.h;
+                        [%expect {| 0 |}];
+                        match c1.l, c1.r with
+                        | Some l', None ->
+                            print_char l'.v;
+                            [%expect {| d |}];
+                        | _ -> [%expect.unreachable]
+                )
+                | _ -> [%expect.unreachable]
+    )
+    | _ -> [%expect.unreachable]
 
