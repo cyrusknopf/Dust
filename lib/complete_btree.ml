@@ -1,14 +1,36 @@
+open Queue
+
 module CompleteBTree =
     struct
-        type 'a node = {
-            v : 'a;
-            l : 'a node option;
-            r : 'a node option;
-        }
 
-        type 'a tree = {
-            root : 'a node option;
-        }
+        type 'a btree =
+            | Empty
+            | Node of {
+                v : 'a;
+                l : 'a btree;
+                r : 'a btree;
+            }
+
+        exception BadStructure of string
+
+
+        (* TODO implement BFS
+        let push (t : 'a btree) (v : 'a) : 'a btree =
+            let q = Queue.create () in
+            let rec ins q =
+                match Queue.take_opt q with
+                | Some Empty -> Node { v = v; l = Empty; r = Empty}
+                | Some (Node {l;r;_} as node) ->
+
+                | _ -> t
+            in ins q 
+            *)
+
+
+
+    end
+
+        (*
 
         exception BadStructure of string
 
@@ -51,9 +73,11 @@ let %expect_test  "test-get_height-root" =
     [%expect {| 1 |}]
 
 let %expect_test "test-get_height-only_child" =
+    let parent = CompleteBTree.make_node 'a' in
+    let t = CompleteBTree.make_tree parent in
     let child = CompleteBTree.make_node 'b' in
-    let parent  = {CompleteBTree.v = 'a'; l = Some child; r = None} in
-    let h = CompleteBTree.get_height (Some parent) in
+    let t' = CompleteBTree.push t child in
+    let h = CompleteBTree.get_height t'.root in
     print_int h;
     [%expect {| 2 |}]
 
@@ -164,4 +188,4 @@ let %expect_test "test-push-three" =
                 | _ -> [%expect.unreachable]
     )
     | _ -> [%expect.unreachable]
-
+*)
