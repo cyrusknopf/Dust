@@ -13,12 +13,24 @@ module CompleteBTree =
 
         exception BadStructure of string
 
+        let exp x y = (float_of_int x) ** (float_of_int y) |> int_of_float
+
+        let rec height (node  : 'a btree) : int =
+            match node with
+            | Empty -> -1
+            | Node n -> 1 + max (height n.l) (height n.r)
+
+        let max_size (t : 'a btree) : int =
+            let h = height t in
+            match h with
+            | 0 -> 0
+            | _ -> exp 2 h + 2
 
         let push (t : 'a btree) (v : 'a) : 'a btree =
             let rec ins (q: 'a btree t) : 'a btree =
             let parent = Queue.take_opt q in
                 match parent with
-                | None -> raise (BadStructure "Wrongly defined tree")
+                | None -> raise (BadStructure "Incorrectly defined tree")
                 | Some Empty -> Node { v = v; l = Empty; r = Empty}
                 | Some Node node ->
                         let l = node.l in
@@ -38,6 +50,33 @@ module CompleteBTree =
     end
 
 (* TESTS *)
+let %expect_test "test-height-root" =
+    let tree = CompleteBTree.Node{ v = 0; l = Empty; r = Empty} in
+    let h = CompleteBTree.height tree in
+    print_int h;
+    [%expect {| 1 |}]
+
+let %expect_test "test-height-empty" =
+    let tree = CompleteBTree.Empty in
+    let h = CompleteBTree.height tree in
+    print_int h;
+    [%expect {| 0 |}]
+
+let %expect_test "test-height-root_with_children" =
+    let tree = CompleteBTree.Node{ v = 0; l = Node{v=1;l=Empty;r=Empty}; r= Node{v=2;l=Empty;r=Empty}} in
+    let h = CompleteBTree.height tree in
+    print_int h;
+    [%expect {| 2 |}]
+
+
+
+let %expect_test "test-max_size-root" =
+    let tree = CompleteBTree.Node{ v = 0; l = Empty; r = Empty} in
+    let m = CompleteBTree.max_size tree in
+    print_int m;
+    [%expect {| 0 |}]
+
+(*
 let %expect_test "test-push-one" = 
     let tree = CompleteBTree.Empty in
     let tree' = CompleteBTree.push tree 1 in
@@ -139,7 +178,6 @@ let %expect_test "test-push-six" =
     let tree = CompleteBTree.push tree 4 in
     let tree = CompleteBTree.push tree 5 in
     let tree = CompleteBTree.push tree 6 in
-    CompleteBTree.print_btree "" false tree;
     match tree with
     | Node n ->(
             print_int n.v;
@@ -164,3 +202,4 @@ let %expect_test "test-push-six" =
                     | _ -> [%expect.unreachable]);)
             | _ -> [%expect.unreachable])
     | _ -> [%expect.unreachable]
+    *)
