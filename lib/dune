@@ -1,7 +1,7 @@
 (library
  (name dust)
  (public_name dust)
- (modules max_heap complete_btree)
+ (modules max_heap complete_btree finger_tree)
  (inline_tests)
  (preprocess (pps ppx_expect ppx_inline_test))
  )
