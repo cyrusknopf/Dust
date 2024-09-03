@@ -1,7 +1,5 @@
 (library
  (name dust)
  (public_name dust)
- (modules binary_search_tree dequeue) 
- (inline_tests)
- (preprocess (pps ppx_expect ppx_inline_test))
+ (modules bstree dequeue) 
  )

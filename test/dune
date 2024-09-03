@@ -1,0 +1,7 @@
+(library
+  (name dust_test)
+  (libraries dust)
+  (inline_tests)
+  (modules bstree_tests)
+  (preprocess (pps ppx_expect))
+ )
