@@ -84,13 +84,14 @@ module BinarySearchTree =
                     | Node s ->(
                             match right with
                             | Empty -> raise (BadTraversal "Right not found")
-                            | Node r -> if s.v = r.v then
-                                Node { s with l = left }
-                            else
-                                let new_tree = replace_successor successor s.v in
-                                match new_tree with
-                                | Empty -> raise (BadTraversal "No successor tree")
-                                | Node n -> Node {n with l = left; r = right}
+                            | Node r -> 
+                                if s.v = r.v then
+                                    Node { s with l = left }
+                                else
+                                    let new_tree = replace_successor right s.v in
+                                    match new_tree with
+                                    | Empty -> raise (BadTraversal "No successor tree")
+                                    | Node _ -> Node { v = s.v; l = left; r = new_tree }
                             )) 
             | _ -> raise (NotMem "Node to delete not found")
 
@@ -334,6 +335,51 @@ let %expect_test "test-remove-full_two_gen_imm_successor" =
     let tree = remove tree 3 in
     print_bstree tree;
     [%expect {| 5{4{2.}}[7{6.}[8.]] |}]
+
+let %expect_test "test-successor-full_two_gen" =
+    let open BinarySearchTree in
+    let tree = Empty in
+    let tree = add tree 5 in
+    let tree = add tree 3 in
+    let tree = add tree 2 in
+    let tree = add tree 4 in
+    let tree = add tree 8 in
+    let tree = add tree 6 in
+    let tree = add tree 9 in
+    let tree = add tree 7 in
+    match tree with
+    | Empty -> [%expect.unreachable]
+    | Node n ->
+        let successor = minimum n.r in
+        match successor with
+        | Empty -> [%expect.unreachable]
+        | Node s ->
+                print_int s.v;
+                [%expect {| 6 |}]
+
+let %expect_test "test-replace_successor-full_two_gen" =
+    let open BinarySearchTree in
+    let tree = Empty in
+    let tree = add tree 5 in
+    let tree = add tree 3 in
+    let tree = add tree 2 in
+    let tree = add tree 4 in
+    let tree = add tree 8 in
+    let tree = add tree 6 in
+    let tree = add tree 9 in
+    let tree = add tree 7 in
+    match tree with
+    | Empty -> [%expect.unreachable]
+    | Node n ->
+        let successor = minimum n.r in
+        match successor with
+        | Empty -> [%expect.unreachable]
+        | Node s ->
+                print_int s.v;
+                [%expect {| 6 |}];
+                let new_tree = replace_successor tree s.v in
+                print_bstree new_tree;
+                [%expect {| 5{3{2.}[4.]}[8{7.}[9.]] |}]
 
 let %expect_test "test-remove-full_two_gen_nonimm_successor" =
     let open BinarySearchTree in
