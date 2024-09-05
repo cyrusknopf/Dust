@@ -1,0 +1,9 @@
+(executable
+ (name bench)
+ (public_name benchmark)
+ (libraries core_bench core dust )
+)
+
+(rule
+ (alias bench)
+ (action (run ./benchmarks/bench.exe)))

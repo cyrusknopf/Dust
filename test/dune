@@ -2,6 +2,6 @@
   (name dust_test)
   (libraries dust)
   (inline_tests)
-  (modules bstree_tests)
+  (modules bstree_tests doublylinkedlist_tests )
   (preprocess (pps ppx_expect))
  )
