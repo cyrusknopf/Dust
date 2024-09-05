@@ -11,13 +11,12 @@ let rec insert_btree (t : 'a bstree) ( n : int) =
 
 
 let () =
-    let bench = Bench.Test.create ~name:"bstree_create" (fun () -> ignore (BSTree.create ())) in
-    Bench.make_command [bench] |> Command_unix.run;
+    let bstree_bench_cre = Bench.Test.create ~name:"bstree_create" (fun () -> ignore (BSTree.create ())) in
 
-    let bench = Bench.Test.create ~name:"bstree_insert_100" (fun () ->
+    let bstree_bench_ins = Bench.Test.create ~name:"bstree_insert_100" (fun () ->
         let t = BSTree.create () in
         let _ = insert_btree t 100 in
         ignore t
-        )
-    in
-    Bench.make_command [bench] |> Command_unix.run
+        ) in
+
+    Bench.make_command [bstree_bench_cre; bstree_bench_ins] |> Command_unix.run
