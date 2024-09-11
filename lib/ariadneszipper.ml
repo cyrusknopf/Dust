@@ -1,3 +1,10 @@
+(*
+    First zipper implementation using the motivation of a labyrinth 
+    with paths forward, forks with left and right paths, and dead ends;
+    found in the following chapter:
+    https://en.wikibooks.org/wiki/Haskell/Zippers
+ *)
+
 module AriadnesZipper : sig
         type 'a node =
         | DeadEnd of 'a 
