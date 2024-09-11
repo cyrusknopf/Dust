@@ -1,5 +1,5 @@
 (library
  (name dust)
  (public_name dust)
- (modules bstree dequeue doublylinkedlist) 
+ (modules bstree dequeue doublylinkedlist zipper ) 
  )
