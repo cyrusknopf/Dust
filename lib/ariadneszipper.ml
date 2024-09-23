@@ -29,7 +29,6 @@ module AriadnesZipper : sig
 
         val set : 'a -> 'a zipper -> 'a zipper
 
-        val apply : ('a -> 'a) -> 'a node -> 'a node
         val apply : ('a -> 'a) -> 'a zipper -> 'a zipper
 
         val keep_straight : 'a zipper -> 'a zipper option
@@ -46,28 +45,6 @@ module AriadnesZipper : sig
         | DeadEnd of 'a 
         | Passage of 'a * 'a node
         | Fork of 'a * 'a node * 'a node
-
-        (* Get the value of a node *)
-        let get  (n : 'a node) : 'a =
-            match n with
-            | DeadEnd x -> x
-            | Passage (x, _) -> x
-            | Fork (x, _, _) -> x
-
-
-        (* Set the value of a node *)
-        let set (v : 'a ) (n : 'a node ) : 'a node =
-            match n with
-            | DeadEnd _ -> DeadEnd v
-            | Passage (_, s) -> Passage (v, s)
-            | Fork (_, l, r) -> Fork (v, l, r)
-
-        (* Apply a function, `f`, to the value of a node *)
-        let apply (f : 'a -> 'a) (n : 'a node) : 'a node =
-            match n with
-            | DeadEnd x -> DeadEnd (f x)
-            | Passage (x, s) -> Passage (f x, s)
-            | Fork (x, l, r) -> Fork (f x, l, r)
 
         (* Stores the data of the node the branch is taken from,
            as well as the subtree lost by the untaken branch *)
